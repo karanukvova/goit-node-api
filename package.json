@@ -1,13 +1,13 @@
 {
-  "name": "goit-node-01",
+  "name": "hw02-express",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node ./server.js",
+    "dev": "nodemon ./server.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +16,10 @@
   },
   "dependencies": {
     "commander": "^11.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "joi": "^17.10.1",
+    "morgan": "^1.10.0",
     "nanoid": "^4.0.2"
   }
 }
