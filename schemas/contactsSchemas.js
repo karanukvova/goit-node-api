@@ -1,13 +1,13 @@
 import Joi from "joi";
 
 const contactsAddSchema = Joi.object({
-  name: Joi.string().required(),
-  
-  email: Joi.string().required(),
+  name: Joi.string().required().message("You must write name"),
 
-  phone: Joi.string().required(),
-  favorite : Joi.boolean()
-})
+  email: Joi.string().required().message("You must write email"),
+
+  phone: Joi.string().required().message("You must write phone"),
+  favorite: Joi.boolean(),
+});
 
 export default {
   contactsAddSchema,
