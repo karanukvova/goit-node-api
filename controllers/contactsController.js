@@ -5,7 +5,8 @@ import { HttpError } from "../helpers/index.js";
 import { ctrlWrapper } from "../decorators/index.js";
 
 const getAll = async (req, res) => {
-  const result = await Contact.find();
+  const { _id: owner } = req.user;
+  const result = await Contact.find({ owner }, "-owner -createdAt -updatedAt")
   res.json(result);
 };
 
@@ -20,7 +21,8 @@ const getById = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  const result = await Contact.create(req.body);
+    const { _id: owner } = req.user;
+  const result = await Contact.create({...req.body, owner});
   res.status(201).json(result);
 };
 
@@ -29,7 +31,7 @@ const updateById = async (req, res) => {
   if (!req.body.favorite) {
     res.status(201).json({ message: "missing field favorite" });
   }
-  const result = await Contact.findByIdAndUpdate(id, req.body);
+  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
   if (!result) {
     throw HttpError(404, `Movie with id=${id} not found`);
   }
