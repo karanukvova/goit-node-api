@@ -1,10 +1,18 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import gravatar from "gravatar"
+import path from "path";
+import fs from "fs/promises";
+import Jimp from "jimp"
+
 
 
 import { HttpError } from "../helpers/index.js";
 import { ctrlWrapper } from "../decorators/index.js";
 import User from "../models/users.js";
+
+const postersPath = path.resolve("public", "avatars");
+
 
 const register = async (req, res) => {
   const { email, password, subscription } = req.body;
@@ -13,7 +21,14 @@ const register = async (req, res) => {
     throw HttpError(409, "Email already exist");
   }
   const hashPassword = await bcrypt.hash(password, 10);
-  const result = await User.create({ ...req.body, password: hashPassword });
+  const url = gravatar.url(email);
+  const fullUrl = `http:${url}`
+  console.log('url: ', url);
+  const result = await User.create({
+    ...req.body,
+    avatarURL:fullUrl,
+    password: hashPassword,
+  });
   res.status(201).json({
     email: result.email,
     subscription: result.subscription,
@@ -72,6 +87,18 @@ const signout = async (req, res) => {
   });
 };
 
+const avatar = async (req, res) => {
+  const { _id } = req.user;
+  const { path: oldPath, filename } = req.file;
+    const newPath = path.join(postersPath, filename);
+    await fs.rename(oldPath, newPath);
+    const avatarURL = path.join("avatars", filename);
+    const result = await User.findByIdAndUpdate(_id, avatarURL);
+    res.status(201).json(result);
+
+  
+};
+
 
 
 export default {
@@ -79,4 +106,5 @@ export default {
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   signout: ctrlWrapper(signout),
+  avatar: ctrlWrapper(avatar),
 };
