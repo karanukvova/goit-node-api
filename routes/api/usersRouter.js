@@ -20,6 +20,10 @@ usersRouter.get("/current", authenticate, usersController.getCurrent);
 
 usersRouter.post("/signout", authenticate, usersController.signout);
 
+usersRouter.get("/verify/:verificationToken", usersController.verify);
+
+usersRouter.post("/verify", usersController.resendVerifyEmail);
+
 usersRouter.patch("/avatars", upload.single("avatar"), authenticate, usersController.avatar);
 
 export default usersRouter;
